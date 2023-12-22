@@ -24,6 +24,8 @@ logger = getLogger(__name__)
 music_logging.setup_logger(logger)
 MUSIC_DIRECTORIES, ANTHEM_CLI_PATH, DESTINATION_DIRECTORY, ANTHEM_CLI_OPTIONS = read_config()
 
+# TODO: break down and unit test
+# TODO: run this all in response to a usb event
 
 def preprocess_music_file(output_dir: str, music_file: str) -> NoReturn:
     # check format
@@ -47,9 +49,6 @@ def preprocess_music_file(output_dir: str, music_file: str) -> NoReturn:
 
 
 if __name__ == '__main__':
-    # TODO: break down and unit test
-    # TODO: run this all in response to a usb event
-
     logger.info(f'Initial config: {MUSIC_DIRECTORIES, ANTHEM_CLI_PATH, DESTINATION_DIRECTORY, ANTHEM_CLI_OPTIONS}')
 
     pedal = Pedal(MUSIC_DIRECTORIES)
