@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+defaults:
+  run:
+    shell: bash -el {0}
+
+jobs:
+  lint:
+    name: Lint & Security
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: environment.yml
+          activate-environment: music_operations
+          python-version: "3.12"
+          auto-activate-base: false
+      - name: Black format check
+        run: black --check src/ test/
+      - name: Flake8
+        run: flake8 src/ test/ --max-line-length=100
+      - name: Bandit security scan
+        run: bandit -r src/ -ll
+
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: environment.yml
+          activate-environment: music_operations
+          python-version: ${{ matrix.python-version }}
+          auto-activate-base: false
+      - name: Run tests with coverage
+        run: pytest --cov=music_operations --cov-report=term-missing --cov-fail-under=90 -v
