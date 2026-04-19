@@ -19,8 +19,11 @@ jobs:
         with:
           environment-file: environment.yml
           activate-environment: music_operations
-          python-version: "3.14"
           auto-activate-base: false
+      - name: Verify black version
+        run: black --version
+      - name: Install package
+        run: pip install -e .
       - name: Black format check
         run: black --target-version py311 --check src/ test/
       - name: Flake8
