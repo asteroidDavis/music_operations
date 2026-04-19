@@ -32,6 +32,9 @@ where = ["src"]
 [tool.setuptools.package-dir]
 "" = "src"
 
+[tool.setuptools.package-data]
+music_operations = ["config/*.ini"]
+
 [tool.pytest.ini_options]
 testpaths = ["test"]
 addopts = "--tb=short"

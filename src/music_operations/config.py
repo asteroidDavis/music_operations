@@ -7,7 +7,9 @@ silently using the wrong path.
 """
 
 import configparser
+import platform
 from dataclasses import dataclass
+from importlib import resources
 from pathlib import Path
 from typing import Optional
 
@@ -16,7 +18,36 @@ class ConfigConflictError(ValueError):
     """Raised when a CLI argument conflicts with the INI config value."""
 
 
-DEFAULT_CONFIG_FILE = "config/NUX.loop-core.ini"
+def _get_default_config_file() -> str:
+    """Return the platform-specific default config file path.
+
+    For packaged installations, loads the config from package data.
+    For development, uses the local config file.
+
+    Returns:
+        Path to the appropriate default config file.
+    """
+    if platform.system() == "Darwin":
+        config_name = "mac.ini"
+    elif platform.system() == "Windows":
+        config_name = "windows.ini"
+    else:
+        config_name = "mac.ini"  # Default to mac for Linux/other
+
+    try:
+        # Try to load from package data (installed package)
+        config_dir = resources.files("music_operations") / "config"
+        config_path = config_dir / config_name
+        if config_path.is_file():
+            return str(config_path)
+    except (FileNotFoundError, AttributeError):
+        pass
+
+    # Fallback to local development path
+    return f"config/{config_name}"
+
+
+DEFAULT_CONFIG_FILE = _get_default_config_file()
 
 
 @dataclass
