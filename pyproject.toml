@@ -7,7 +7,7 @@ name = "music-operations"
 version = "0.3.0"
 description = "CLI toolkit for music file operations: AnthemScore transcription, Repomix packaging, and USB pedal monitoring."
 readme = "README.md"
-requires-python = ">=3.11,<3.15"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "watchdog>=3.0.0",
 ]
