@@ -3,10 +3,9 @@
 import logging
 import sys
 from logging import Formatter, Logger, StreamHandler
-from typing import NoReturn
 
 
-def setup_logger(logger: Logger) -> NoReturn:
+def setup_logger(logger: Logger) -> None:
     """Configure *logger* with a stdout handler and standard format.
 
     Args:
