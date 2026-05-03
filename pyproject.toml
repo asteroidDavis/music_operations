@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "music-operations"
+version = "0.3.0"
+description = "CLI toolkit for music file operations: AnthemScore transcription, Repomix packaging, and USB pedal monitoring."
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "watchdog>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "pre-commit>=3.7.0",
+    "black>=24.3.0",
+    "flake8>=7.0.0",
+    "flake8-bugbear>=24.0.0",
+    "bandit>=1.7.8",
+]
+
+[project.scripts]
+music-operations = "music_operations.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.package-data]
+music_operations = ["config/*.ini"]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+addopts = "--tb=short"
+
+[tool.coverage.run]
+source = ["music_operations"]
+omit = ["test/*"]
+
+[tool.coverage.report]
+fail_under = 90
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]
