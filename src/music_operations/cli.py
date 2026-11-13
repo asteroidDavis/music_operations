@@ -13,12 +13,14 @@ values differ, the command exits with a non-zero status (conflict error).
 """
 
 import argparse
+import json
 import sys
 from logging import getLogger
 from multiprocessing import Pool, cpu_count
 from typing import List, NoReturn, Optional
 
 from music_operations import music_logging
+from music_operations.availability import list_operations
 from music_operations.config import (
     DEFAULT_CONFIG_FILE,
     AppConfig,
@@ -48,9 +50,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument(
+        "--list-operations",
+        action="store_true",
+        help="Print a JSON list of operations with 'available' and 'reason'.",
+    )
+    mode.add_argument(
         "--operation",
-        required=True,
         choices=SUPPORTED_OPERATIONS,
         help=(
             "Operation to perform: "
@@ -158,6 +165,20 @@ def main(argv: Optional[List[str]] = None) -> int:
     """
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    if args.list_operations:
+        try:
+            cfg: Optional[AppConfig] = read_config(
+                file=args.config,
+                anthemscore_home=args.anthemscore_home,
+                repomix_home=args.repomix_home,
+                output_dir=args.output_dir,
+            )
+        except (ConfigConflictError, FileNotFoundError) as exc:
+            logger.warning("Listing without config: %s", exc)
+            cfg = None
+        print(json.dumps(list_operations(cfg)))
+        return 0
 
     try:
         cfg = read_config(

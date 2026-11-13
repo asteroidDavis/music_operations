@@ -31,8 +31,10 @@ def _get_default_config_file() -> str:
         config_name = "mac.ini"
     elif platform.system() == "Windows":
         config_name = "windows.ini"
+    elif platform.system() == "Linux":
+        config_name = "linux.ini"
     else:
-        config_name = "mac.ini"  # Default to mac for Linux/other
+        config_name = "mac.ini"
 
     try:
         # Try to load from package data (installed package)

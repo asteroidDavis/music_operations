@@ -71,6 +71,17 @@ Or via the legacy entry point:
 python src/new_music_usb_monitor.py
 ```
 
+### Listing available operations
+
+```bash
+music-operations --list-operations
+# [{"name": "anthemscore", "available": false, "reason": "AnthemScore has no build for Linux aarch64"},
+#  {"name": "repomix", "available": true, "reason": ""}, ...]
+```
+
+The Rust worker uses this to hide operations a host can't run (AnthemScore
+only ships for Linux x86_64, Windows and macOS; `monitor` needs a display).
+
 ### Configuration
 
 All options can be specified in an INI file (default: `config/NUX.loop-core.ini`):
